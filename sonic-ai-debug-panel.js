@@ -1,0 +1,5 @@
+/* Optional in-game diagnostic panel for Sonic AI Failure Log. */
+(function(root){'use strict';
+function mount({logger,agent,parent=document.body,onSave}){const box=document.createElement('details');box.id='ai-debug-log';box.innerHTML=`<summary>AI Debug Log</summary><div class="ai-debug-actions"><button data-a="refresh">Refresh</button><button data-a="export">Export JSON</button><button data-a="clear">Clear Log</button></div><pre data-out></pre>`;parent.appendChild(box);const out=box.querySelector('[data-out]');function render(){const rows=logger.summary().slice(0,20);out.textContent=(agent?.message?'NOW: '+agent.message+'\n\n':'')+(rows.length?rows.map((r,i)=>`${i+1}. ${r.type.toUpperCase()} x${r.count} · stage ${r.stage} · ${r.profile}\n   @ ${r.lastX},${r.lastY} · rings ${r.rings} · ${r.reason}`).join('\n'):'No failures recorded yet.');}box.addEventListener('click',e=>{const a=e.target?.dataset?.a;if(a==='refresh')render();if(a==='export')logger.download();if(a==='clear'){logger.clear();onSave?.();render();}});render();return{element:box,render};}
+root.SonicAIDebugPanel={mount};
+})(typeof window==='object'?window:globalThis);

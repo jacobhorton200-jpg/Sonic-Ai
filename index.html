@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <meta name="theme-color" content="#0a1022" />
+  <title>Sonic 1 AI Playground</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">SONIC 1 · MOBILE · AI LAB</div>
+        <h1>Sonic AI Playground</h1>
+      </div>
+      <button id="aboutBtn" class="ghost-btn" type="button">About</button>
+    </header>
+
+    <section class="game-card">
+      <div class="game-topline">
+        <div class="status-dot-wrap"><span id="statusDot" class="status-dot idle"></span><span id="statusText">Choose a Sonic 1 ROM</span></div>
+        <div id="ramBadge" class="badge">ROM: supplied USA/Europe · 1bc674be · RAM bridge: waiting</div>
+      </div>
+
+      <div id="gameFrame" class="game-frame">
+        <div id="game" class="game-host"></div>
+        <div id="emptyState" class="empty-state">
+          <div class="ring-mark">◉</div>
+          <h2>Load your Sonic 1 ROM</h2>
+          <p>The game runs locally in your browser. The ROM is not uploaded anywhere by this page.</p>
+          <label class="primary-btn file-btn">
+            <input id="romInput" type="file" accept=".bin,.md,.gen,.smd,application/octet-stream" />
+            Choose ROM
+          </label>
+          <p class="tiny">This site does not include or distribute the Sonic 1 ROM.</p>
+        </div>
+      </div>
+
+      <div class="control-row">
+        <button id="aiBtn" class="ai-btn" type="button" disabled>
+          <span class="ai-icon">✦</span>
+          <span><strong>AI Play</strong><small id="aiSub">Load a ROM first</small></span>
+        </button>
+        <button id="takeoverBtn" class="secondary-btn" type="button" disabled>Take Over</button>
+        <button id="fullscreenBtn" class="secondary-btn" type="button" disabled>Fullscreen</button>
+      </div>
+    </section>
+
+    <section class="telemetry-grid">
+      <article class="panel now-panel">
+        <div class="panel-title">AI thought</div>
+        <div id="thought" class="thought">Waiting for the game.</div>
+        <div class="stats-row">
+          <div><span>Rings</span><strong id="ringsStat">–</strong></div>
+          <div><span>Stage</span><strong id="stageStat">–</strong></div>
+          <div><span>Speed</span><strong id="speedStat">–</strong></div>
+          <div><span>Goal</span><strong id="goalStat">–</strong></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-title">AI behavior</div>
+        <div class="chips">
+          <span>curiosity map</span><span>route memory</span><span>ring trails</span><span>failure learning</span><span>backtracking</span><span>momentum aware</span>
+        </div>
+        <p id="bridgeExplain" class="muted">When the emulator exposes Genesis system RAM, the AI reads Sonic's real game state and controls the game using controller inputs only.</p>
+      </article>
+    </section>
+
+    <section class="panel diagnostics">
+      <div class="panel-heading-row">
+        <div>
+          <div class="panel-title">AI Debug Log</div>
+          <p class="muted">Deaths, stalls, bad routes, successful discoveries, and the exact movement profile the AI tried.</p>
+        </div>
+        <div class="diag-actions">
+          <button id="refreshLogBtn" class="ghost-btn" type="button">Refresh</button>
+          <button id="exportLogBtn" class="ghost-btn" type="button">Export</button>
+          <button id="clearLogBtn" class="ghost-btn danger" type="button">Clear</button>
+        </div>
+      </div>
+      <pre id="logOutput" class="log-output">No failures recorded yet.</pre>
+    </section>
+  </main>
+
+  <dialog id="aboutDialog">
+    <div class="dialog-card">
+      <div class="dialog-heading"><h2>How this works</h2><button id="closeAbout" class="ghost-btn" type="button">Close</button></div>
+      <p>This page uses EmulatorJS with the Genesis Plus GX core. On supported builds it asks the libretro core for the Genesis system-RAM pointer, then feeds Sonic's real RAM state into Cognition v3.</p>
+      <p>The AI does not teleport Sonic or write rings/lives/position. It sends controller inputs. A cognition-patched ROM can also use the mailbox bridge for richer native movement execution.</p>
+      <p><strong>Compatibility note:</strong> stock Sonic 1 can run here. AI Play requires the emulator core to expose system RAM to JavaScript; if that hook is unavailable, the game still plays normally and the page will tell you the bridge is unavailable.</p>
+    </div>
+  </dialog>
+
+  <script src="sonic-ai-failure-log.js"></script>
+  <script src="sonic-cognition-v3.js"></script>
+  <script src="sonic-cognition-v3-adapter.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

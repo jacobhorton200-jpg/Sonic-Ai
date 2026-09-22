@@ -1,0 +1,8 @@
+{
+  "name":"Sonic AI Playground",
+  "short_name":"Sonic AI",
+  "display":"standalone",
+  "background_color":"#07101e",
+  "theme_color":"#0a1022",
+  "start_url":"./"
+}
